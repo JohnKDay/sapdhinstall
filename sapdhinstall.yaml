@@ -48,8 +48,6 @@ spec:
         env: 
           - name: DOCKER_HOST 
             value: tcp://localhost:2375
-        command: [ '/bin/bash', '-c', '--' ]
-        args: [ "trap : TERM INT; sleep infinity & wait" ]
         volumeMounts:
         - mountPath: /etc/docker/certs.d
           name: certs
@@ -66,3 +64,18 @@ spec:
         emptyDir: {}
       - name: sapdhinstalls
         emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: sapdhinstall
+ labels:
+  run: ssh
+spec:
+ type: NodePort
+ ports:
+ - port: 2022
+   targetPort: 22
+   protocol: TCP
+ selector:
+  app: sapdhinstall
